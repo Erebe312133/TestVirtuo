@@ -9,8 +9,9 @@ router.get('/:id', async (req, res) => {
   service.find(req.params.id).then((car) => {
     if (car) {
       res.json(car);
+    } else {
+      res.sendStatus(404);
     }
-    res.sendStatus(404);
   }).catch(() => {
     res.sendStatus(404);
   })

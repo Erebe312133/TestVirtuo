@@ -6,8 +6,9 @@ class CarService {
       Car.find({}, (err, cars) => {
         if (err) {
           reject(err);
+        } else {
+          resolve(cars);
         }
-        resolve(cars);
       });
     })
   }
@@ -17,8 +18,9 @@ class CarService {
       Car.findById(id, (err, car) => {
         if (err) {
           reject(err);
+        } else {
+          resolve(car);
         }
-        resolve(car);
       });
     })
   }
@@ -29,8 +31,9 @@ class CarService {
       car.save((err, savedCar) => {
         if (err) {
           reject(err);
+        } else {
+          resolve(savedCar);
         }
-        resolve(savedCar);
       });
     });
   }
@@ -40,12 +43,17 @@ class CarService {
       Car.findById(id, (err, car) => {
         if (err) {
           reject({ isNotFound: true, err});
+          return ;
         }
-        car.updateOne(carData, (err, savedCar) => {
+        car.name = carData.name;
+        car.stationId = carData.stationId;
+        car.available = carData.available;
+        car.save((err, savedCar) => {
           if (err) {
             reject(err);
+          } else {
+            resolve(savedCar);
           }
-          resolve(savedCar);
         });  
       });
     });
@@ -53,11 +61,12 @@ class CarService {
 
   static delete(id) {
     return new Promise((resolve, reject) => {
-      Car.remove({ _id: id }, (err, savedCar) => {
+      Car.deleteOne({ _id: id }, (err) => {
         if (err) {
           reject(err);
+        } else {
+          resolve();
         }
-        resolve(savedCar);
       });
     });
   }

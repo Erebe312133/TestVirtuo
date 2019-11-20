@@ -6,8 +6,9 @@ class StationService {
       Station.find({}, (err, stations) => {
         if (err) {
           reject(err);
+        } else {
+          resolve(stations);
         }
-        resolve(stations);
       });
     })
   }
@@ -17,8 +18,10 @@ class StationService {
       Station.findById(id, (err, station) => {
         if (err) {
           reject(err);
+          return ;
+        } else {
+          resolve(station);
         }
-        resolve(station);
       });
     })
   }
@@ -29,8 +32,10 @@ class StationService {
       station.save((err, savedStation) => {
         if (err) {
           reject(err);
+          return ;
+        } else {
+          resolve(savedStation);
         }
-        resolve(savedStation);
       });
     });
   }
@@ -38,15 +43,17 @@ class StationService {
   static update(id, stationData) {
     return new Promise((resolve, reject) => {
       Station.findById(id, (err, station) => {
-        if (err) {
+        if (err || !station) {
           reject({ isNotFound: true, err});
+          return ;
         }
         station.name = stationData.name;
         station.save((err, savedStation) => {
           if (err) {
             reject(err);
+          } else {
+            resolve(savedStation);
           }
-          resolve(savedStation);
         });  
       });
     });
@@ -54,11 +61,13 @@ class StationService {
 
   static delete(id) {
     return new Promise((resolve, reject) => {
-      Station.remove({ _id: id }, (err, savedStation) => {
+      Station.deleteOne({ _id: id }, (err) => {
         if (err) {
           reject(err);
+          return ;
+        } else {
+          resolve();
         }
-        resolve(savedStation);
       });
     });
   }
